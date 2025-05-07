@@ -23,7 +23,7 @@ source /common.sh
 install_cleanup_trap
 
 # 2025-05-07 Platima: Test and add resolver for build
-if [ -e /etc/resolv.conf ]; then
+if [ ! -e /etc/resolv.conf ]; then
 	echo 1.1.1.1 > /etc/resolv.conf
 	echo_green "Added resolv.conf for apt"
 fi
