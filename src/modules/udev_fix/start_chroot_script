@@ -22,6 +22,11 @@ set -Ee
 source /common.sh
 install_cleanup_trap
 
+# 2025-05-07 Platima: Test and add resolver for build
+if [ -e /etc/resolv.conf ]; then
+	echo 1.1.1.1 > /etc/resolv.conf
+	echo_green "Added resolv.conf for apt"
+fi
 
 echo_green "Running 'udev' fix ..."
 
@@ -29,8 +34,6 @@ echo_green "Running 'udev' fix ..."
 if [[ -f /etc/armbian.txt ]]; then
     echo_green "Armbian base image detected ..."
     echo_green "Updating ${UDEV_FIX_PKGS} first ..."
-    echo_green $(cat /etc/resolv.conf)
-    echo_green $(ls /etc/)
     echo_green $(ping -c 1 armbian.com)
     apt-get update
     # Disable shellcheck here, because we need 'word splitting'
