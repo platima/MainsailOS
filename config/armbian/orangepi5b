@@ -28,7 +28,7 @@ if [ -e /etc/resolv.conf.mainsail_bak ]; then
 	if [ -e /etc/resolv.conf ]; then rm /etc/resolv.conf; fi
 	mv /etc/resolv.conf.mainsail_bak /etc/resolv.conf
 	echo_green \"Restored original resolv.conf\"
-fi"
+fi
 
 echo_green Patching armbianEnv.txt for 5B
 # Check for Orange Pi 5B and modify the DTB file path
