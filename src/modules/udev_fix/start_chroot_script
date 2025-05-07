@@ -27,11 +27,13 @@ if [ -L /etc/resolv.conf ] && [ ! -e /etc/resolv.conf ]; then
     echo_green "Found broken symlink at /etc/resolv.conf"
     # Fix the symlink or create the file
     rm /etc/resolv.conf
-    echo 1.1.1.1 > /etc/resolv.conf
+    echo "nameserver 1.1.1.1" > /etc/resolv.conf
+    echo "nameserver 8.8.8.8" >> /etc/resolv.conf
     echo_green "Added new resolv.conf for apt"
 elif [ ! -e /etc/resolv.conf ]; then
     echo_green "Missing /etc/resolv.conf"
-    echo 1.1.1.1 > /etc/resolv.conf
+    echo "nameserver 1.1.1.1" > /etc/resolv.conf
+    echo "nameserver 8.8.8.8" >> /etc/resolv.conf
     echo_green "Added resolv.conf for apt"
 fi
 
@@ -41,7 +43,8 @@ echo_green "Running 'udev' fix ..."
 if [[ -f /etc/armbian.txt ]]; then
     echo_green "Armbian base image detected ..."
     echo_green "Updating ${UDEV_FIX_PKGS} first ..."
-    echo_green $(ping -c 1 armbian.com)
+    cat /etc/resolv.conf
+    ping -c 1 armbian.com
     apt-get update
     # Disable shellcheck here, because we need 'word splitting'
     # shellcheck disable=SC2086
