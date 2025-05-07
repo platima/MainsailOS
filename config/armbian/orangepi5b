@@ -10,6 +10,7 @@ export DOWNLOAD_URL_IMAGE="https://au.sbcmirror.org/armbian/dl/orangepi5/archive
 
 export BASE_ROOT_PARTITION="1"
 export BASE_IMAGE_ENLARGEROOT=3000
+export BASE_BOOT_MOUNT_PATH=boot
 
 # Export BASE_POSTSCRIPT variable to modify armbianEnv.txt for Orange Pi 5B compatibility
 export BASE_POSTSCRIPT="
@@ -32,14 +33,6 @@ if [ -f /boot/armbianEnv.txt ]; then
         fi
     fi
 fi"
-
-# Add /boot/firmware folder so `touch /"${BASE_BOOT_MOUNT_PATH}"/ssh` from CustomPiOS src/modules/base/start_chroot_script works
-export BASE_PRESCRIPT="
-echo_green Making sure ${BASE_BOOT_MOUNT_PATH} exists
-if [ ! -d ${BASE_BOOT_MOUNT_PATH} ]; then
-	mkdir -p ${BASE_BOOT_MOUNT_PATH}
-fi"
-	
 
 ### JSON sniplet Setup
 ### NOTE: Please see all config files for setup variables!!!
