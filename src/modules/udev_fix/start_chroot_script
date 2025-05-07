@@ -23,9 +23,16 @@ source /common.sh
 install_cleanup_trap
 
 # 2025-05-07 Platima: Test and add resolver for build
-if [ ! -e /etc/resolv.conf ]; then
-	echo 1.1.1.1 > /etc/resolv.conf
-	echo_green "Added resolv.conf for apt"
+if [ -L /etc/resolv.conf ] && [ ! -e /etc/resolv.conf ]; then
+    echo_green "Found broken symlink at /etc/resolv.conf"
+    # Fix the symlink or create the file
+    rm /etc/resolv.conf
+    echo 1.1.1.1 > /etc/resolv.conf
+    echo_green "Added new resolv.conf for apt"
+elif [ ! -e /etc/resolv.conf ]; then
+    echo_green "Missing /etc/resolv.conf"
+    echo 1.1.1.1 > /etc/resolv.conf
+    echo_green "Added resolv.conf for apt"
 fi
 
 echo_green "Running 'udev' fix ..."
