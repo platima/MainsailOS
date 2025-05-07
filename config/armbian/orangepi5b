@@ -12,8 +12,24 @@ export BASE_ROOT_PARTITION="1"
 export BASE_IMAGE_ENLARGEROOT=3000
 export BASE_BOOT_MOUNT_PATH=boot
 
+# Patch a potentially broken resolv.conf during chroot
+export BASE_PRESCRIPT="
+if [ -L /etc/resolv.conf ] && [ ! -e /etc/resolv.conf ]; then
+    echo_green \"Found broken symlink at /etc/resolv.conf\"
+    mv /etc/resolv.conf /etc/resolv.conf.mainsail_bak
+    echo \"nameserver 1.1.1.1\" > /etc/resolv.conf
+    echo \"nameserver 8.8.8.8\" >> /etc/resolv.conf
+    echo_green \"Added new resolv.conf for build\"
+fi"
+
 # Export BASE_POSTSCRIPT variable to modify armbianEnv.txt for Orange Pi 5B compatibility
 export BASE_POSTSCRIPT="
+if [ -e /etc/resolv.conf.mainsail_bak ]; then
+	if [ -e /etc/resolv.conf ]; then rm /etc/resolv.conf; fi
+	mv /etc/resolv.conf.mainsail_bak /etc/resolv.conf
+	echo_green \"Restored original resolv.conf\"
+fi"
+
 echo_green Patching armbianEnv.txt for 5B
 # Check for Orange Pi 5B and modify the DTB file path
 if [ -f /boot/armbianEnv.txt ]; then
