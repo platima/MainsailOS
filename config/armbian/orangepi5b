@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+# Shebang for better file detection
+# shellcheck enable=require-variable-braces
+
+BASE_ARCH="arm64"
+
+# Image source
+DOWNLOAD_URL_CHECKSUM="https://au.sbcmirror.org/armbian/dl/orangepi5/archive/Armbian_25.2.1_Orangepi5_noble_current_6.12.13.img.xz.sha"
+DOWNLOAD_URL_IMAGE="https://au.sbcmirror.org/armbian/dl/orangepi5/archive/Armbian_25.2.1_Orangepi5_noble_current_6.12.13.img.xz"
+
+BASE_ROOT_PARTITION="1"
+BASE_IMAGE_ENLARGEROOT=3000
+
+# export Variables
+export BASE_ARCH
+export BASE_ROOT_PARTITION
+export BASE_IMAGE_ENLARGEROOT
+export DOWNLOAD_URL_CHECKSUM
+export DOWNLOAD_URL_IMAGE
+
+# Export BASE_POSTSCRIPT variable to modify armbianEnv.txt for Orange Pi 5B compatibility
+export BASE_POSTSCRIPT="
+echo_green Patching armbianEnv.txt for 5B
+# Check for Orange Pi 5B and modify the DTB file path
+if [ -f /boot/armbianEnv.txt ]; then
+
+    # Replace the Orange Pi 5 DTB with Orange Pi 5B DTB
+    sed -i 's|fdtfile=rockchip/rk3588s-orangepi-5.dtb|fdtfile=rockchip/rk3588s-orangepi-5b.dtb|g' /boot/armbianEnv.txt
+
+    # Enable Wi-Fi/Bluetooth module if needed
+    if ! grep -q 'overlays=orangepi-5-ap6275p' /boot/armbianEnv.txt; then
+
+        # If overlays line exists, append to it
+        if grep -q '^overlays=' /boot/armbianEnv.txt; then
+            sed -i 's/^overlays=/overlays=orangepi-5-ap6275p /' /boot/armbianEnv.txt
+        else
+            # Otherwise add a new line
+            echo 'overlays=orangepi-5-ap6275p' >> /boot/armbianEnv.txt
+        fi
+    fi
+fi"
+
+### JSON sniplet Setup
+### NOTE: Please see all config files for setup variables!!!
+# shellcheck disable=SC2034
+JSON_PRETTY_SBC_NAME="Orange Pi 5B"
+# shellcheck disable=SC2034
+JSON_SUPPORTED_SBC="orangepi5b-64bit"
