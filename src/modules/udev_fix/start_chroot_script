@@ -29,8 +29,9 @@ echo_green "Running 'udev' fix ..."
 if [[ -f /etc/armbian.txt ]]; then
     echo_green "Armbian base image detected ..."
     echo_green "Updating ${UDEV_FIX_PKGS} first ..."
-    echo_red $(cat /etc/resolv.conf)
-    echo_red $(ping -c 1 armbian.com)
+    echo_green $(cat /etc/resolv.conf)
+    echo_green $(ls /etc/)
+    echo_green $(ping -c 1 armbian.com)
     apt-get update
     # Disable shellcheck here, because we need 'word splitting'
     # shellcheck disable=SC2086
