@@ -40,7 +40,62 @@ fi
 ## END
 
 ## Step 3: Disable first run service
-systemctl_if_exists disable armbian-firstrun-config.service
+# 2025-05-05 Platima:
+# This is a patched version of the funciton in CustomPiOS as some base
+# images may not have a service that is called, and in that situation
+# the entire build will fail. For that reason, this first checks that
+# each service exists before taking action.
+function systemctl_if_exists_2() {
+    if ! hash systemctl 2>/dev/null; then
+        echo_red "no systemctl, not running"
+        return 0
+    fi
+
+    # Extract all service names from arguments
+    local services=()
+    local other_args=()
+    for arg in "$@"; do
+        if [[ "${arg}" == *.service ]]; then
+            services+=("${arg}")
+        else
+            other_args+=("${arg}")
+        fi
+    done
+
+    # If no services found, just run the command as is
+    if [ ${#services[@]} -eq 0 ]; then
+        systemctl "${@}"
+        return $?
+    fi
+
+    # Check each service and only execute for those that exist
+    local exit_code=0
+    local found_valid_service=0
+
+    for service in "${services[@]}"; do
+        if systemctl list-unit-files "${service}" &>/dev/null; then
+            # Service exists, run the command for this service
+            systemctl "${other_args[@]}" "${service}"
+            local cmd_exit=$?
+            # Keep track of the highest (worst) exit code
+            if [ ${cmd_exit} -gt ${exit_code} ]; then
+                exit_code=${cmd_exit}
+            fi
+            found_valid_service=1
+        else
+            echo_red "service '${service}' does not exist, skipping"
+        fi
+    done
+
+    # If no valid services were found, return success to prevent build failure
+    if [ ${found_valid_service} -eq 0 ]; then
+        return 0
+    fi
+
+    return ${exit_code}
+}
+
+systemctl_if_exists_2 disable armbian-firstrun-config.service
 ## END
 
 ## Step 4: Copy original script to /usr/local/bin/network-configurator
