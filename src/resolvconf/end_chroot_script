@@ -1,9 +1,14 @@
 #!/usr/bin/env bash
-#### MainsailOS Specific Tweaks for orangepi images
+#### MainsailOS Specific Tweaks for images using resolved that
+#### would otherwise have a broken symlink for /etc/resolv.conf
+#### during build chroot.
+#### 
+#### This is called via BASE_POSTSCRIPT, not as a module as that
+#### is actually too late.
 ####
-#### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
-#### Copyright 2023 - till today
-#### https://github.com/mainsail-crew/MainsailOS
+#### Written by Platima <wave@plati.ma>
+#### Copyright 2025 - till today
+#### https://github.com/platima/MainsailOS
 ####
 #### This File is distributed under GPLv3
 ####
