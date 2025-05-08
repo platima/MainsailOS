@@ -11,8 +11,8 @@ export DOWNLOAD_URL_IMAGE="https://au.sbcmirror.org/armbian/dl/orangepi5/archive
 export BASE_ROOT_PARTITION="1"
 export BASE_IMAGE_ENLARGEROOT=3000
 export BASE_BOOT_MOUNT_PATH=boot
-export BASE_PRESCRIPT=modules/resolveconf/start_chroot_script
-export BASE_POSTSCRIPT=modules/resolveconf/end_chroot_script
+export BASE_PRESCRIPT=${DIST_PATH}/modules/resolveconf/start_chroot_script
+export BASE_POSTSCRIPT=${DIST_PATH}/modules/resolveconf/end_chroot_script
 
 export ARMBIAN_CONFIG_ORANGEPI_5B_PATCH=true
 
