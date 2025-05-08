@@ -5,8 +5,10 @@
 export BASE_ARCH="arm64"
 
 # Image source
-export DOWNLOAD_URL_CHECKSUM="https://au.sbcmirror.org/armbian/dl/orangepi5/archive/Armbian_25.2.1_Orangepi5_noble_current_6.12.13.img.xz.sha"
-export DOWNLOAD_URL_IMAGE="https://au.sbcmirror.org/armbian/dl/orangepi5/archive/Armbian_25.2.1_Orangepi5_noble_current_6.12.13.img.xz"
+#export DOWNLOAD_URL_CHECKSUM="https://au.sbcmirror.org/armbian/dl/orangepi5/archive/Armbian_25.2.1_Orangepi5_noble_current_6.12.13.img.xz.sha"
+#export DOWNLOAD_URL_IMAGE="https://au.sbcmirror.org/armbian/dl/orangepi5/archive/Armbian_25.2.1_Orangepi5_noble_current_6.12.13.img.xz"
+export DOWNLOAD_URL_CHECKSUM="https://au.sbcmirror.org/armbian/dl/orangepi5/archive/Armbian_25.2.1_Orangepi5_bookworm_vendor_6.1.99_minimal.img.xz.sha"
+export DOWNLOAD_URL_IMAGE="https://au.sbcmirror.org/armbian/dl/orangepi5/archive/Armbian_25.2.1_Orangepi5_bookworm_vendor_6.1.99_minimal.img.xz"
 
 export BASE_ROOT_PARTITION="1"
 export BASE_IMAGE_ENLARGEROOT=3000
