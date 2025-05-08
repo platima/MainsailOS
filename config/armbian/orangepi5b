@@ -12,27 +12,10 @@ export BASE_ROOT_PARTITION="1"
 export BASE_IMAGE_ENLARGEROOT=3000
 export BASE_BOOT_MOUNT_PATH=boot
 
-# Export BASE_POSTSCRIPT variable to modify armbianEnv.txt for Orange Pi 5B compatibility
-export BASE_POSTSCRIPT="
-echo_green Patching armbianEnv.txt for 5B
-# Check for Orange Pi 5B and modify the DTB file path
-if [ -f /boot/armbianEnv.txt ]; then
+export MODULES="resolveconf,base,pkgupgrade,udev_fix,armbian(armbian_net,mainsailos,klipper,is_req_preinstall,moonraker,mainsail,timelapse,crowsnest,sonar)"
 
-    # Replace the Orange Pi 5 DTB with Orange Pi 5B DTB
-    sed -i 's|fdtfile=rockchip/rk3588s-orangepi-5.dtb|fdtfile=rockchip/rk3588s-orangepi-5b.dtb|g' /boot/armbianEnv.txt
-
-    # Enable Wi-Fi/Bluetooth module if needed
-    if ! grep -q 'overlays=orangepi-5-ap6275p' /boot/armbianEnv.txt; then
-
-        # If overlays line exists, append to it
-        if grep -q '^overlays=' /boot/armbianEnv.txt; then
-            sed -i 's/^overlays=/overlays=orangepi-5-ap6275p /' /boot/armbianEnv.txt
-        else
-            # Otherwise add a new line
-            echo 'overlays=orangepi-5-ap6275p' >> /boot/armbianEnv.txt
-        fi
-    fi
-fi"
+export ARMBIAN_CONFIG_ORANGEPI_5B_PATCH=true
+export ARMBIAN_CONFIG_ORANGEPI_RESOLVCONF=true
 
 ### JSON sniplet Setup
 ### NOTE: Please see all config files for setup variables!!!

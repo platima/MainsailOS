@@ -151,3 +151,25 @@ if [[ "$(is_board_type)" == "bananapim2zero" ]] \
     echo "overlays=uart3" >> "${ARMBIAN_CONFIG_TXT_FILE}"
 fi
 ## END Step 9
+
+
+## Step 10: Swap device tree for 5B and enable Wi-Fi
+## This is because there is no Armbian image for the 5B, but the 5 image has the DTBs required
+## Swapping out the release definition at the same time too
+if [[ "${ARMBIAN_CONFIG_ORANGEPI_5B_PATCH}" == "true" ]]; then
+	# Update release file
+	if [[ -f /etc/armbian-release ]]; then
+		sed -i 's/BOARD=orangepi5/BOARD=orangepi5b/g' /etc/armbian-release
+		sed -i 's/BOARD_NAME=\"Orange Pi 5\"/BOARD_NAME=\"Orange Pi 5B\"/g' /etc/armbian-release
+	fi
+
+	# Check for Orange Pi 5B and modify the DTB file path
+	if [[ -f /boot/armbianEnv.txt ]]; then
+	    echo_green Patching armbianEnv.txt for 5B
+
+	    # Replace the Orange Pi 5 DTB with Orange Pi 5B DTB
+	    sed -i 's|fdtfile=rockchip/rk3588s-orangepi-5.dtb|fdtfile=rockchip/rk3588s-orangepi-5b.dtb|g' /boot/armbianEnv.txt
+	fi
+fi
+
+## END Step 10
