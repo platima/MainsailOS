@@ -23,8 +23,8 @@ export BASE_ARCH="arm64"
 #export DOWNLOAD_URL_IMAGE="https://armbian.hosthatch.com/archive/orangepi5/archive/Armbian_24.8.1_Orangepi5_bookworm_current_6.10.6.img.xz"
 
 # Fails at Moonraker after 59m 1s
-#export DOWNLOAD_URL_CHECKSUM="https://armbian.hosthatch.com/archive/orangepi5/archive/Armbian_24.8.1_Orangepi5_jammy_current_6.10.6.img.xz.sha"
-#export DOWNLOAD_URL_IMAGE="https://armbian.hosthatch.com/archive/orangepi5/archive/Armbian_24.8.1_Orangepi5_jammy_current_6.10.6.img.xz"
+export DOWNLOAD_URL_CHECKSUM="https://armbian.hosthatch.com/archive/orangepi5/archive/Armbian_24.8.1_Orangepi5_jammy_current_6.10.6.img.xz.sha"
+export DOWNLOAD_URL_IMAGE="https://armbian.hosthatch.com/archive/orangepi5/archive/Armbian_24.8.1_Orangepi5_jammy_current_6.10.6.img.xz"
 
 
 export BASE_ROOT_PARTITION="1"
