@@ -27,7 +27,7 @@ set -eo pipefail
 DEBIAN_FRONTEND="noninteractive"
 TITLE="\e[31mMainsailOS Patcher\e[0m - udev rule fix"
 UDEV_FIX_RAW_RULE_FILE="https://raw.githubusercontent.com/systemd/systemd/main/rules.d/60-serial.rules"
-UDEV_FIX_TMP_FILE="/%{TMPDIR}/60-serial.rules"
+UDEV_FIX_TMP_FILE="/${TMPDIR}/60-serial.rules"
 UDEV_FIX_OUTPUT_FILE="/etc/udev/rules.d/60-serial.rules"
 
 # Message Vars
