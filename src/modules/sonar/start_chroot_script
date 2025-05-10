@@ -20,7 +20,7 @@ install_cleanup_trap
 
 # Module only Variables
 SR_BUILD_INSTALL_SH="/home/${BASE_USER}/sonar/tools/install.sh"
-SR_BUILD_PACKAGE_FILE="/${TMPDIR}/sr_packages.lst"
+SR_BUILD_PACKAGE_FILE="/"${RUNNER_TEMP}"/sr_packages.lst"
 
 echo_green "Installing sonar ..."
 

@@ -32,13 +32,13 @@ cp "${PICONFIG_CONFIG_TXT_FILE}" /tmp
 mv "${PICONFIG_CONFIG_TXT_FILE}" "${PICONFIG_CONFIG_BAK_FILE}"
 
 # Step 4: Concatenate files to config
-cat /${TMPDIR}/config.txt /${TMPDIR}/msos_config.txt >/${TMPDIR}/config.new
+cat /"${RUNNER_TEMP}"/config.txt /"${RUNNER_TEMP}"/msos_config.txt >/"${RUNNER_TEMP}"/config.new
 
 # Step 5: Copy new config to "/boot/config.txt"
-cp /${TMPDIR}/config.new "${PICONFIG_CONFIG_TXT_FILE}"
+cp /"${RUNNER_TEMP}"/config.new "${PICONFIG_CONFIG_TXT_FILE}"
 
 # Step 6: Cleanup
-rm -f /${TMPDIR}/*config*
+rm -f /"${RUNNER_TEMP}"/*config*
 
 # Step 7: Copy default cmdline.txt to backup file
 cp "${PICONFIG_CMDLINE_TXT_FILE}" "${PICONFIG_CMDLINE_BAK_FILE}"
