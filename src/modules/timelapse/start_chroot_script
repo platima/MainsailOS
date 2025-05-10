@@ -34,7 +34,7 @@ install_cleanup_trap
 ## helper func moonraker update_manager
 add_timelapse_entry() {
     if [[ -f "${TIMELAPSE_CONFIG_DIR}/moonraker.conf" ]]; then
-        if [[ -f "/"${RUNNER_TEMP}"/moonraker.conf" ]]; then
+        if [[ -f "/${RUNNER_TEMP}/moonraker.conf" ]]; then
             rm -rf /"${RUNNER_TEMP}"/moonraker.conf
         fi
         sudo -u "${BASE_USER}" \

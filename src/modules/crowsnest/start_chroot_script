@@ -19,7 +19,7 @@ source /common.sh
 install_cleanup_trap
 
 # Module only Variables
-CN_BUILD_PACKAGE_FILE="/"${RUNNER_TEMP}"/cn_packages.lst"
+CN_BUILD_PACKAGE_FILE="/${RUNNER_TEMP}/cn_packages.lst"
 
 # Helper Func
 is_raspbian() {
