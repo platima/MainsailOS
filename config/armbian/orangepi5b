@@ -35,6 +35,8 @@ export BASE_POSTSCRIPT=${DIST_PATH}/modules/resolvconf/post
 
 export ARMBIAN_CONFIG_ORANGEPI_5B_PATCH=true
 
+echo TMPDIR1="${TMPDIR}"
+
 ### JSON sniplet Setup
 ### NOTE: Please see all config files for setup variables!!!
 # shellcheck disable=SC2034
