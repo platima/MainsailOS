@@ -6,8 +6,5 @@ CUSTOM_PI_OS_PATH=$(<"${DIR}"/custompios_path)
 export CUSTOM_PI_OS_PATH
 export TMPDIR
 export PATH=$PATH:$CUSTOM_PI_OS_PATH
-echo TMPDIR2="${TMPDIR}"
-env
-exit 1
 
 "${CUSTOM_PI_OS_PATH}"/build_custom_os "$@"
