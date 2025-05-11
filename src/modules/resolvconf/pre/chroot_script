@@ -34,7 +34,11 @@ if [ -L /etc/resolv.conf ] && [ ! -e /etc/resolv.conf ]; then
 fi
 
 echo_green "/"
-ls /
+ls -Alh /
 echo_green "/tmp"
-ls /tmp
+ls -Alh /tmp
+echo_green "echo 1 > /tmp/blah"
+echo 1 > /tmp/blah
+echo_green "cat /tmp/blah"
+cat /tmp/blah
 exit 1
