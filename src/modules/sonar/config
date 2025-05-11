@@ -11,7 +11,7 @@
 
 # sonar repo
 [[ -n "$SONAR_REPO_SHIP" ]] || SONAR_REPO_SHIP=https://github.com/mainsail-crew/sonar.git
-[[ -n "$SONAR_REPO_BRANCH" ]] || SONAR_REPO_BRANCH=main
+[[ -n "$SONAR_REPO_BRANCH" ]] || SONAR_REPO_BRANCH="v0.1.3"
 
 # sonar setup
 [[ -n "$SONAR_DEFAULT_CONF" ]] || SONAR_DEFAULT_CONF="resources/sonar.conf"
