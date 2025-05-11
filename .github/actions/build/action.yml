@@ -117,6 +117,8 @@ runs:
     - name: Build Image
       shell: bash
       run: sudo modprobe loop && cd repository/src && sudo bash -x ./build_dist
+      env:
+        TMPDIR: ${{ runner.temp }}
 
     - name: Cleanup workspace & fix permissions
       if: success()
