@@ -14,4 +14,11 @@
 #### Credits: Thanks to Arksine for this great API :)
 
 [ -n "$MOONRAKER_REPO_SHIP" ] || MOONRAKER_REPO_SHIP=https://github.com/Arksine/moonraker.git
-[ -n "$MOONRAKER_REPO_BRANCH" ] || MOONRAKER_REPO_BRANCH=master
+# 2025-05-11 Plaitma
+# tag 0.8.0 is verified and was releasd when Mainsail 1.3.2 was built
+# current fails inexplicably:
+# Cloning into 'moonraker'...
+# Generating packages file ...
+# build failed, unmounting image...
+[ -n "$MOONRAKER_REPO_BRANCH" ] || MOONRAKER_REPO_BRANCH="v0.8.0"
+#[ -n "$MOONRAKER_REPO_BRANCH" ] || MOONRAKER_REPO_BRANCH=master

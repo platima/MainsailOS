@@ -32,13 +32,3 @@ if [ -L /etc/resolv.conf ] && [ ! -e /etc/resolv.conf ]; then
     echo "nameserver 8.8.8.8" >> /etc/resolv.conf
     echo_green "Added new resolv.conf for build"
 fi
-
-echo_green "/"
-ls -Alh /
-echo_green "/tmp"
-ls -Alh /tmp
-echo_green "echo 1 > /tmp/blah"
-echo 1 > /tmp/blah
-echo_green "cat /tmp/blah"
-cat /tmp/blah
-exit 1
