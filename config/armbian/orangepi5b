@@ -28,7 +28,7 @@ export DOWNLOAD_URL_IMAGE="https://au.sbcmirror.org/armbian/dl/orangepi5/archive
 
 
 export BASE_ROOT_PARTITION="1"
-export BASE_IMAGE_ENLARGEROOT=3000
+export BASE_IMAGE_ENLARGEROOT=4000
 export BASE_BOOT_MOUNT_PATH=boot
 export BASE_PRESCRIPT=${DIST_PATH}/modules/resolvconf/pre
 export BASE_POSTSCRIPT=${DIST_PATH}/modules/resolvconf/post
