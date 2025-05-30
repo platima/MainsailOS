@@ -13,6 +13,10 @@ export DOWNLOAD_URL_CHECKSUM="https://au.sbcmirror.org/armbian/dl/rock-3a/archiv
 # Fix for "mount: /home/owner/actions-runner/_work/MainsailOS/MainsailOS/repository/src/workspace/mount/boot/firmware: mount point does not exist."
 export BASE_BOOT_MOUNT_PATH=boot
 
+# Fix for systemd resolved non-functional from within runner container
+export BASE_PRESCRIPT=${DIST_PATH}/modules/resolvconf/pre
+export BASE_POSTSCRIPT=${DIST_PATH}/modules/resolvconf/post
+
 ### JSON sniplet Setup
 ### NOTE: Please see all config files for setup variables!!!
 # shellcheck disable=SC2034
