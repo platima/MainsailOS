@@ -17,6 +17,9 @@ export BASE_BOOT_MOUNT_PATH=boot
 export BASE_PRESCRIPT=${DIST_PATH}/modules/resolvconf/pre
 export BASE_POSTSCRIPT=${DIST_PATH}/modules/resolvconf/post
 
+# Add enough room for apt cache etc
+export BASE_IMAGE_ENLARGEROOT=4000
+
 ### JSON sniplet Setup
 ### NOTE: Please see all config files for setup variables!!!
 # shellcheck disable=SC2034
