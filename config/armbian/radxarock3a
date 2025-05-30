@@ -10,6 +10,9 @@ export BASE_ARCH="arm64"
 export DOWNLOAD_URL_IMAGE="https://au.sbcmirror.org/armbian/dl/rock-3a/archive/Armbian_25.2.1_Rock-3a_bookworm_current_6.12.13_minimal.img.xz"
 export DOWNLOAD_URL_CHECKSUM="https://au.sbcmirror.org/armbian/dl/rock-3a/archive/Armbian_25.2.1_Rock-3a_bookworm_current_6.12.13_minimal.img.xz.sha"
 
+# Fix for "mount: /home/owner/actions-runner/_work/MainsailOS/MainsailOS/repository/src/workspace/mount/boot/firmware: mount point does not exist."
+export BASE_BOOT_MOUNT_PATH=boot
+
 ### JSON sniplet Setup
 ### NOTE: Please see all config files for setup variables!!!
 # shellcheck disable=SC2034
