@@ -4,6 +4,9 @@
 
 export BASE_ARCH="arm64"
 
+# Add partition alignment fix due to CustomPiOS bug
+export MODULES="${MODULES},fix_partition_alignment"
+
 # Image source
 # Cannot use Noble - too new
 # Fails at Moonraker after 28m 57s
