@@ -1,0 +1,174 @@
+#!/usr/bin/env bash
+#### MainsailOS Specific Tweaks for images using CustomPiOS
+#### Post-processing script to fix partition/filesystem alignment
+#### This is due to inconsistent blocks being added/removed from resizies in CustomPiOS src/common.sh
+####
+#### NOTE: This should be used as 'end_chroot_script', not 'start_chroot_script'
+#### because it needs access to the image file and host tools after chroot is unmounted.
+####
+#### Written by Platima <wave@plati.ma>
+#### Copyright 2025 - till today
+#### https://github.com/platima/MainsailOS
+####
+#### This File is distributed under GPLv3
+####
+
+# shellcheck enable=require-variable-braces
+# Source error handling, leave this in place
+set -Ee
+
+## Uncomment for deeper debugging
+# set -x
+
+# Source CustomPIOS common.sh
+# shellcheck disable=SC1091
+if [ -f /common.sh ]; then
+        source /common.sh
+        install_cleanup_trap
+fi
+
+# Define color functions if they don't exist
+if ! command -v echo_green >/dev/null 2>&1; then
+    echo_green() { echo -e "\033[32m${1}\033[0m"; }
+fi
+if ! command -v echo_red >/dev/null 2>&1; then
+    echo_red() { echo -e "\033[31m${1}\033[0m"; }
+fi
+
+# Post-processing script to fix partition/filesystem alignment
+IMAGE_PATH="${1:-${BASE_IMG_PATH}}"  # Use argument or BASE_IMG_PATH from CustomPiOS
+PARTITION="${BASE_ROOT_PARTITION:-2}"      # Use CustomPiOS config or default to 2
+
+if [ ! -f "${IMAGE_PATH}" ]; then
+    echo_red "Error: Image file not found: ${IMAGE_PATH}"
+    exit 1
+fi
+
+echo "Fixing partition alignment for ${IMAGE_PATH}..."
+
+# Get current partition info
+if ! sfdisk --json "${IMAGE_PATH}" >/dev/null 2>&1; then
+    echo_red "Error: Cannot read partition table from ${IMAGE_PATH}"
+    exit 1
+fi
+
+partition_info=$(sfdisk --json "${IMAGE_PATH}" 2>/dev/null)
+if [ -z "${partition_info}" ]; then
+    echo_red "Error: Failed to get partition information"
+    exit 1
+fi
+
+start=$(echo "${partition_info}" | jq -r ".partitiontable.partitions[$(( PARTITION - 1 ))].start" 2>/dev/null)
+size=$(echo "${partition_info}" | jq -r ".partitiontable.partitions[$(( PARTITION - 1 ))].size" 2>/dev/null)
+
+# Validate that we got valid numbers
+if ! [[ "${start}" =~ ^[0-9]+$ ]] || ! [[ "${size}" =~ ^[0-9]+$ ]]; then
+    echo_red "Error: Could not get valid partition information (start: ${start}, size: ${size})"
+    exit 1
+fi
+
+echo "Current partition starts at block ${start}, size ${size} blocks"
+
+# Calculate if we need alignment
+remainder=$((size % 512))
+if [ "${remainder}" -ne 0 ]; then
+    blocks_to_add=$((512 - remainder))
+    new_size=$((size + blocks_to_add))
+    new_end=$((start + new_size - 1))
+
+    echo "Adding ${blocks_to_add} blocks to align partition (new size: ${new_size} blocks)"
+
+    # Extend the image file first
+    additional_bytes=$((blocks_to_add * 512))
+    if ! dd if=/dev/zero bs=1 count="${additional_bytes}" >> "${IMAGE_PATH}" 2>/dev/null; then
+        echo_red "Error: Failed to extend image file"
+        exit 1
+    fi
+
+    # Check if it's GPT or MBR
+    if sfdisk --json "${IMAGE_PATH}" | grep -q '"label":"gpt"'; then
+        echo "Detected GPT partition table"
+        # For GPT, use sgdisk or gdisk commands
+        # First, fix the GPT backup table location
+        sgdisk --move-second-header "${IMAGE_PATH}" 2>/dev/null || {
+            echo "sgdisk not available, using fdisk GPT mode"
+            # Use fdisk but with GPT-specific approach
+            fdisk "${IMAGE_PATH}" <<EOF
+p
+d
+${PARTITION}
+n
+${PARTITION}
+${start}
+${new_end}
+w
+EOF
+        }
+
+        # If sgdisk is available, use it for precise control
+        if command -v sgdisk >/dev/null 2>&1; then
+            # Delete and recreate the partition with exact boundaries
+            sgdisk -d "${PARTITION}" "${IMAGE_PATH}"
+            sgdisk -n "${PARTITION}:${start}:${new_end}" -t "${PARTITION}:8300" "${IMAGE_PATH}"
+        fi
+    else
+        echo "Detected MBR partition table"
+        # Original MBR approach
+        fdisk "${IMAGE_PATH}" <<EOF
+p
+d
+${PARTITION}
+n
+p
+${PARTITION}
+${start}
+${new_end}
+p
+w
+EOF
+    fi
+
+    # Extend the filesystem to fill the new partition
+    offset=$((start * 512))
+    
+    # Setup cleanup trap for loop device
+    cleanup_lodev() {
+        if [ -n "${LODEV}" ] && losetup "${LODEV}" >/dev/null 2>&1; then
+            losetup -d "${LODEV}"
+        fi
+    }
+    trap cleanup_lodev EXIT
+    
+    if LODEV=$(losetup -f --show -o "${offset}" "${IMAGE_PATH}" 2>/dev/null); then
+        echo "Running filesystem check and resize..."
+        if e2fsck -fy "${LODEV}" && resize2fs "${LODEV}"; then
+            losetup -d "${LODEV}"
+            trap - EXIT  # Remove trap since we cleaned up successfully
+            echo_green "Partition alignment fixed successfully"
+        else
+            echo_red "Error: Filesystem operations failed"
+            exit 1
+        fi
+    else
+        echo_red "Error: Could not create loop device"
+        exit 1
+    fi
+else
+    echo_green "Partition is already properly aligned"
+fi
+
+echo "Final partition info:"
+fdisk -l "${IMAGE_PATH}" | grep "${IMAGE_PATH}${PARTITION}"
+
+# Verify the fix worked
+final_size=$(echo "${partition_info}" | jq -r ".partitiontable.partitions[$(( PARTITION - 1 ))].size" 2>/dev/null)
+if [[ "${final_size}" =~ ^[0-9]+$ ]]; then
+    final_remainder=$((final_size % 512))
+    if [ "${final_remainder}" -eq 0 ]; then
+        echo_green "Verification: Partition is now properly aligned (${final_size} blocks, divisible by 512)"
+    else
+        echo_red "Warning: Partition alignment may still have issues (${final_size} blocks, remainder: ${final_remainder})"
+    fi
+else
+    echo_red "Warning: Could not verify final partition size"
+fi
