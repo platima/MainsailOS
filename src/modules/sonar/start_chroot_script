@@ -38,11 +38,18 @@ gitclone SONAR_REPO sonar
 
 ## Step 3: grep PKGLIST from install.sh for dependencies
 echo_green "Generating packages file ..."
-grep "PKGLIST=" "${SR_BUILD_INSTALL_SH}" >> "${SR_BUILD_PACKAGE_FILE}"
+awk '/local pkglist=\(.*\)/ { gsub(/local pkglist=\(|\)/, ""); print "SONAR_DEPS=\"" $0 "\"" }' "${SR_BUILD_INSTALL_SH}" >> "${SR_BUILD_PACKAGE_FILE}"
 
-## Step 4: Rename PKGLIST to Module usable Var
-echo_green "Rename variable PKGLIST to SONAR_DEPS ..."
-sed -i 's/PKGLIST/SONAR_DEPS/g' "${SR_BUILD_PACKAGE_FILE}"
+## Step 4 is now handled by the awk command above (2025-06-01 Platima)
+
+## Step 5: Source SR_package.lst file
+# shellcheck disable=SC1090
+. "${SR_BUILD_PACKAGE_FILE}"
+
+## Step 6: Install packages
+echo_green "Install sonar dependencies ..."
+# shellcheck disable=SC2086
+check_install_pkgs ${SONAR_DEPS}
 
 ## Step 5: Source SR_package.lst file
 # shellcheck disable=SC1090
