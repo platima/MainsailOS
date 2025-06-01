@@ -41,11 +41,19 @@ gitclone MOONRAKER_REPO moonraker
 
 ## Step 3: grep PKGLIST from install-moonraker.sh for dependencies
 echo_green "Generating packages file ..."
-grep "PKGLIST=" "${MN_BUILD_INSTALL_SH}" >> "${MN_BUILD_PACKAGE_FILE}"
+# Extract the package list from the new Python-style format
+awk '/system_deps = {/,/}/ {
+    if ($0 ~ /"debian":/) in_debian=1
+    else if (in_debian && $0 ~ /]/) in_debian=0
+    else if (in_debian && $0 ~ /"[^"]*"/) {
+        gsub(/^[^"]*"/, "")
+        gsub(/".*$/, "")
+        gsub(/;.*$/, "")
+        if ($0 != "") print "MOONRAKER_DEPS=\"${MOONRAKER_DEPS} " $0 "\""
+    }
+}' "${MN_BUILD_INSTALL_SH}" >> "${MN_BUILD_PACKAGE_FILE}"
 
-## Step 4: Rename PKGLIST to Module usable Var
-echo_green "Rename variable PKGLIST to MOONRAKER_DEPS ..."
-sed -i 's/PKGLIST/MOONRAKER_DEPS/g' "${MN_BUILD_PACKAGE_FILE}"
+## Step 4: Skipped for simplicity with new moonraker-install.sh (2025-06-01 Platima)
 
 ## Step 5: Source cn_package.lst file
 # shellcheck disable=SC1090
