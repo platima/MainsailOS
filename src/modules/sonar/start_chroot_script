@@ -77,6 +77,24 @@ echo_green "Create Sonar install config"
 echo_red DEBUG START
 pwd
 cat ./tools/.config
+echo IMPORTING
+    ## Source config if present
+    if [[ -s tools/.config ]]; then
+        # shellcheck disable=SC1091
+        . tools/.config
+        return 0
+    else
+        config_msg
+        return 0
+    fi
+    if [[ -n "${SONAR_DATA_PATH}" ]]; then
+	echo "GOT DATA PATH: ${SONAR_DATA_PATH}"
+        SONAR_CONFIG_PATH="${SONAR_DATA_PATH}/config"
+        SONAR_LOG_PATH="${SONAR_DATA_PATH}/logs"
+        SONAR_SYSTEMD_PATH="${SONAR_DATA_PATH}/systemd"
+else
+	echo NO DATA PATH
+    fi
 echo_red DEBUG END
 
 ## Step 8: Run sonar install routine
