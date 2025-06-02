@@ -82,10 +82,7 @@ echo IMPORTING
     if [[ -s tools/.config ]]; then
         # shellcheck disable=SC1091
         . tools/.config
-        return 0
-    else
-        config_msg
-        return 0
+	echo IMPORTED
     fi
     if [[ -n "${SONAR_DATA_PATH}" ]]; then
 	echo "GOT DATA PATH: ${SONAR_DATA_PATH}"
