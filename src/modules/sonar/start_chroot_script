@@ -73,8 +73,14 @@ echo_green "Create Sonar install config"
   echo "SONAR_DATA_PATH=\"/home/${BASE_USER}/printer_data\""
   echo "SONAR_ADD_SONAR_MOONRAKER=\"1\""
   echo "SONAR_UNATTENDED=\"1\""
-  mkdir -p /home/${BASE_USER}/printer_data/systemd
 } > ./tools/.config
+
+
+## Step 7.6 Create required directories for sonar install
+echo_green "Creating required directories..."
+mkdir -p "/home/${BASE_USER}/printer_data/config"
+mkdir -p "/home/${BASE_USER}/printer_data/logs" 
+mkdir -p "/home/${BASE_USER}/printer_data/systemd"
 
 ## Step 8: Run sonar install routine
 echo_green "Launch sonar install routine ..."
