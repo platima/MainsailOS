@@ -67,6 +67,7 @@ check_install_pkgs ${SONAR_DEPS}
 pushd "/home/${BASE_USER}/sonar" &> /dev/null || exit 1
 
 ## Step 7.5 Create config file
+echo_green "Create Sonar install config"
 {
   echo "BASE_USER=\"${BASE_USER}\""
   echo "SONAR_DATA_PATH=\"/home/${BASE_USER}/printer_data\""
@@ -75,7 +76,6 @@ pushd "/home/${BASE_USER}/sonar" &> /dev/null || exit 1
 } > ./tools/.config
 echo_red DEBUG START
 pwd
-file ./tools/.config
 cat ./tools/.config
 echo_red DEBUG END
 
