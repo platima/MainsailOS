@@ -73,6 +73,11 @@ pushd "/home/${BASE_USER}/sonar" &> /dev/null || exit 1
   echo "SONAR_ADD_SONAR_MOONRAKER=\"1\""
   echo "SONAR_UNATTENDED=\"1\""
 } > ./tools/.config
+echo_red DEBUG START
+pwd
+file ./tools/.config
+cat ./tools/.config
+echo_red DEBUG END
 
 ## Step 8: Run sonar install routine
 echo_green "Launch sonar install routine ..."
